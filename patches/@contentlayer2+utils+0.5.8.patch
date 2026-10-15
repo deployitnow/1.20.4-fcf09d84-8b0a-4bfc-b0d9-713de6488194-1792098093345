@@ -1,0 +1,47 @@
+diff --git a/node_modules/@contentlayer2/utils/dist/tracing-effect/index.js b/node_modules/@contentlayer2/utils/dist/tracing-effect/index.js
+index 58f7791..625a3dd 100644
+--- a/node_modules/@contentlayer2/utils/dist/tracing-effect/index.js
++++ b/node_modules/@contentlayer2/utils/dist/tracing-effect/index.js
+@@ -1,14 +1,15 @@
+ import * as T from '@effect-ts/core/Effect';
+ import * as OT from '@effect-ts/otel';
+ import * as OTNode from '@effect-ts/otel-sdk-trace-node';
+-import { Resource } from '@opentelemetry/resources';
++import { resourceFromAttributes } from '@opentelemetry/resources';
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
+ import { LiveSimpleProcessor, makeOTLPTraceExporterConfigLayer } from './otel-exporter-trace-otlp-grpc.js';
+ //
+ // Jaeger Tracer (via Grpc Collector)
+ //
++// Compatible with OpenTelemetry JS 2.x (Resource constructor removed in favor of resourceFromAttributes)
+ const makeNodeTracingProvider = (serviceName) => OTNode.NodeProvider({
+-    resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: serviceName }),
++    resource: resourceFromAttributes({ [SemanticResourceAttributes.SERVICE_NAME]: serviceName }),
+ });
+ const CollectorConfig = makeOTLPTraceExporterConfigLayer({});
+ const makeJaegerNodeTracingLayer = (serviceName) => CollectorConfig['>+>'](OT.LiveTracer['<<<'](makeNodeTracingProvider(serviceName)['>+>'](LiveSimpleProcessor)));
+diff --git a/node_modules/@contentlayer2/utils/src/tracing-effect/index.ts b/node_modules/@contentlayer2/utils/src/tracing-effect/index.ts
+index 1bedf58..8099b43 100644
+--- a/node_modules/@contentlayer2/utils/src/tracing-effect/index.ts
++++ b/node_modules/@contentlayer2/utils/src/tracing-effect/index.ts
+@@ -4,7 +4,7 @@ import type * as L from '@effect-ts/core/Effect/Layer'
+ import type { Has } from '@effect-ts/core/Has'
+ import * as OT from '@effect-ts/otel'
+ import * as OTNode from '@effect-ts/otel-sdk-trace-node'
+-import { Resource } from '@opentelemetry/resources'
++import { resourceFromAttributes } from '@opentelemetry/resources'
+ import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions'
+ 
+ import { LiveSimpleProcessor, makeOTLPTraceExporterConfigLayer } from './otel-exporter-trace-otlp-grpc.js'
+@@ -13,9 +13,10 @@ import { LiveSimpleProcessor, makeOTLPTraceExporterConfigLayer } from './otel-ex
+ // Jaeger Tracer (via Grpc Collector)
+ //
+ 
++// Compatible with OpenTelemetry JS 2.x (Resource constructor removed in favor of resourceFromAttributes)
+ const makeNodeTracingProvider = (serviceName: string) =>
+   OTNode.NodeProvider({
+-    resource: new Resource({ [SemanticResourceAttributes.SERVICE_NAME]: serviceName }),
++    resource: resourceFromAttributes({ [SemanticResourceAttributes.SERVICE_NAME]: serviceName }),
+   })
+ 
+ const CollectorConfig = makeOTLPTraceExporterConfigLayer({})

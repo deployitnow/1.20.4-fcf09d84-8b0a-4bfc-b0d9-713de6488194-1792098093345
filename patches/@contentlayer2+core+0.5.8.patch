@@ -1,0 +1,25 @@
+diff --git a/node_modules/@contentlayer2/core/dist/generation/generate-dotpkg.js b/node_modules/@contentlayer2/core/dist/generation/generate-dotpkg.js
+index 1347945..39a9803 100644
+--- a/node_modules/@contentlayer2/core/dist/generation/generate-dotpkg.js
++++ b/node_modules/@contentlayer2/core/dist/generation/generate-dotpkg.js
+@@ -29,7 +29,7 @@ export const generateDotpkgStream = ({ config, verbose, isDev, }) => {
+ const successCallback = (onSuccess) => {
+     if (!onSuccess)
+         return T.unit;
+-    return pipe(getCwd, T.map((cwd) => ArtifactsDir.getDirPath({ cwd })), T.tapSync((path) => console.log('successCallback', path)), T.chain((generatedPkgPath) => T.tryCatchPromise(() => onSuccess(() => import(URL.pathToFileURL(filePathJoin(generatedPkgPath, 'generated', 'index.mjs')).href)), (error) => new SuccessCallbackError({ error }))), OT.withSpan('@contentlayer2/core/generation:successCallback'));
++    return pipe(getCwd, T.map((cwd) => ArtifactsDir.getDirPath({ cwd })), T.chain((generatedPkgPath) => T.tryCatchPromise(() => onSuccess(() => import(URL.pathToFileURL(filePathJoin(generatedPkgPath, 'generated', 'index.mjs')).href)), (error) => new SuccessCallbackError({ error }))), OT.withSpan('@contentlayer2/core/generation:successCallback'));
+ };
+ const writeFilesForCache = ({ config, cache, schemaDef, targetPath, generationOptions, writtenFilesCache, isDev, }) => pipe(T.gen(function* ($) {
+     const withPrefix = (...path_) => filePathJoin(targetPath, ...path_);
+diff --git a/node_modules/@contentlayer2/core/src/generation/generate-dotpkg.ts b/node_modules/@contentlayer2/core/src/generation/generate-dotpkg.ts
+index 14cbe0c..ba09ad2 100644
+--- a/node_modules/@contentlayer2/core/src/generation/generate-dotpkg.ts
++++ b/node_modules/@contentlayer2/core/src/generation/generate-dotpkg.ts
+@@ -129,7 +129,6 @@ const successCallback = (onSuccess: SuccessCallback | undefined) => {
+   return pipe(
+     getCwd,
+     T.map((cwd) => ArtifactsDir.getDirPath({ cwd })),
+-    T.tapSync((path) => console.log('successCallback', path)),
+     T.chain((generatedPkgPath) =>
+       T.tryCatchPromise(
+         () => onSuccess(() => import(URL.pathToFileURL(filePathJoin(generatedPkgPath, 'generated', 'index.mjs')).href)),

@@ -1,0 +1,16 @@
+diff --git a/node_modules/gray-matter/lib/engines.js b/node_modules/gray-matter/lib/engines.js
+index 38f993d..44c9034 100644
+--- a/node_modules/gray-matter/lib/engines.js
++++ b/node_modules/gray-matter/lib/engines.js
+@@ -13,8 +13,9 @@ const engines = exports = module.exports;
+  */
+ 
+ engines.yaml = {
+-  parse: yaml.safeLoad.bind(yaml),
+-  stringify: yaml.safeDump.bind(yaml)
++  // js-yaml 4 removed safeLoad/safeDump; load/dump are safe by default
++  parse: yaml.load.bind(yaml),
++  stringify: yaml.dump.bind(yaml)
+ };
+ 
+ /**
